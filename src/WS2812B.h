@@ -16,6 +16,7 @@
 #define WS2812B_H
 
 #include <Arduino.h>
+#include <SPI.h>
 /*
  * old version used 3 separate tables, one per byte of the 24 bit encoded data
  *
@@ -55,7 +56,7 @@ class WS2812B {
  public:
 
   // Constructor: number of LEDs
-  WS2812B (uint16_t number_of_leds);// Constuctor 
+  WS2812B (uint16_t number_of_leds, uint32 spiNbr = 1);// Constuctor 
     ~WS2812B();
   void
     begin(void),
@@ -80,7 +81,8 @@ class WS2812B {
     canShow(void) { return (micros() - endTime) >= 300L; }
 
 	private:
-
+    uint32 spiNbr;
+    SPIClass *pSpi;
   boolean
     begun;         // true if begin() previously called
   uint16_t

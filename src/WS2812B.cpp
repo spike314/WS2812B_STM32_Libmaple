@@ -9,6 +9,8 @@
   SPI DIV32 gives a pulse width of 444nS which is well within spec for the WS2812B but
   is probably too long for the WS2812 which needs a 350ns pulse for T0H
  
+  With modificatons by Aram Prez to support SPI2.  See <http://www.stm32duino.com/viewtopic.php?f=9&t=3706&p=46063&hilit=ws2812b#p46063>
+
   This WS2811B library is free software: you can redistribute it and/or modify
   it under the terms of the GNU Lesser General Public License as
   published by the Free Software Foundation, either version 3 of
@@ -29,9 +31,11 @@
 
 
 // Constructor when n is the number of LEDs in the strip
-WS2812B::WS2812B(uint16_t number_of_leds) :
+WS2812B::WS2812B(uint16_t number_of_leds, uint32 nbr) :
   brightness(0), pixels(NULL)
 {
+  spiNbr = nbr;
+  pSpi = new SPIClass(spiNbr);
   updateLength(number_of_leds);
 }
 
@@ -42,15 +46,22 @@ WS2812B::~WS2812B()
   {
 	  free(pixels);
   }
-  SPI.end();
+  pSPI->end();
 }
 
 void WS2812B::begin(void) {
 
 if (!begun)
 {
-  SPI.setClockDivider(WS2812B_SPI_DIVISOR);
-  SPI.begin();
+    if (spiNbr == 1)
+    {
+      pSpi->setClockDivider(WS2812B_SPI_DIVISOR);
+    }
+    else if (spiNbr = 2)
+    {
+      pSpi->setClockDivider(SPI_CLOCK_DIV16);  //for F1 72Mhz. To Do - Adjust for CPU
+    }
+    pSpi->begin();
   begun = true;
 }
 }
@@ -82,7 +93,7 @@ void WS2812B::updateLength(uint16_t n)
 // Sends the current buffer to the leds
 void WS2812B::show(void) 
 {
-  SPI.dmaSendAsync(pixels,numBytes);// Start the DMA transfer of the current pixel buffer to the LEDs and return immediately.
+  pSpi->dmaSendAsync(pixels,numBytes);// Start the DMA transfer of the current pixel buffer to the LEDs and return immediately.
 
   // Need to copy the last / current buffer to the other half of the double buffer as most API code does not rebuild the entire contents
   // from scratch. Often just a few pixels are changed e.g in a chaser effect
@@ -137,8 +148,8 @@ void WS2812B::setPixelColor(uint16_t n, uint32_t c)
 	}
 	else
 	{
-      r = (uint8_t)(c >> 16),
-      g = (uint8_t)(c >>  8),
+    r = (uint8_t)(c >> 16),
+    g = (uint8_t)(c >>  8),
 	  b = (uint8_t)c;		
 	}
 	
