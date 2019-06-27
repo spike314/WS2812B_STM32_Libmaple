@@ -247,3 +247,140 @@ void WS2812B::clear()
 	   *bptr++ = *tPtr++;	
 	}
 }
+// Returns the color of the nth pixel
+uint32_t WS2812B::getPixelColor(uint16_t n)
+{
+  //  uint32_t *bigptr;
+  uint8_t r, g, b, Byte_1, Byte_2, Byte_3;
+  uint8_t *bptr = pixels + (n << 3) + n + 1;
+
+  //Divide the first 24 bits of the stream into 3 bytes that contain the green code
+    Byte_1 = *bptr;
+    *bptr++;
+    Byte_2 = *bptr;
+    *bptr++;
+    Byte_3 = *bptr;
+
+    //Mask the Bytes from the buffer and set the corresponding bit in the green color variable
+      g = 0;
+      if (Byte_1 & 0x40)
+      {
+        g|=0x80;
+      }
+      if (Byte_1 & 0x08)
+      {
+        g|=0x40;
+      }
+      if (Byte_1 & 0x01)
+      {
+        g|=0x20;
+      }
+      if (Byte_2 & 0x20)
+      {
+        g|=0x10;
+      }
+      if (Byte_2 & 0x04)
+      {
+        g|=0x08;
+      }
+      if (Byte_3 & 0x80)
+      {
+        g|=0x04;
+      }
+      if (Byte_3 & 0x10)
+      {
+        g|=0x02;
+      }
+      if (Byte_3 & 0x02)
+      {
+        g|=0x01;
+      }
+
+        //Divide the second 24 bits of the stream into 3 bytes that contain the red code
+    *bptr++;
+    Byte_1 = *bptr;
+    *bptr++;
+    Byte_2 = *bptr;
+    *bptr++;
+    Byte_3 = *bptr;
+
+    //Mask the Bytes from the buffer and set the corresponding bit in the green color variable
+      r = 0;
+      if (Byte_1 & 0x40)
+      {
+        r|=0x80;
+     }
+      if (Byte_1 & 0x08)
+      {
+        r|=0x40;
+      }
+      if (Byte_1 & 0x01)
+      {
+        r|=0x20;
+      }
+      if (Byte_2 & 0x20)
+      {
+        r|=0x10;
+      }
+      if (Byte_2 & 0x04)
+      {
+        r|=0x08;
+      }
+      if (Byte_3 & 0x80)
+      {
+        r|=0x04;
+      }
+      if (Byte_3 & 0x10)
+      {
+        r|=0x02;
+      }
+      if (Byte_3 & 0x02)
+      {
+        r|=0x01;
+      }
+
+      //Divide the last 24 bits of the stream into 3 bytes that contain the blue code
+    *bptr++;
+    Byte_1 = *bptr;
+    *bptr++;
+    Byte_2 = *bptr;
+    *bptr++;
+    Byte_3 = *bptr;
+
+    //Mask the Bytes from the buffer and set the corresponding bit in the green color variable
+      b = 0;
+      if (Byte_1 & 0x40)
+      {
+        b|=0x80;
+      }
+      if (Byte_1 & 0x08)
+      {
+        b|=0x40;
+      }
+      if (Byte_1 & 0x01)
+      {
+        b|=0x20;
+     }
+      if (Byte_2 & 0x20)
+      {
+        b|=0x10;
+      }
+      if (Byte_2 & 0x04)
+      {
+        b|=0x08;
+      }
+      if (Byte_3 & 0x80)
+      {
+        b|=0x04;
+      }
+      if (Byte_3 & 0x10)
+      {
+        b|=0x02;
+      }
+      if (Byte_3 & 0x02)
+      {
+        b|=0x01;
+      }
+  return ((uint32_t)r << 16) | ((uint32_t)g << 8) | b;
+}
+
