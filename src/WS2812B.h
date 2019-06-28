@@ -4,6 +4,9 @@
   published by the Free Software Foundation, either version 3 of
   the License, or (at your option) any later version.
 
+  With modificatons by Aram Prez to support SPI2.  See <http://www.stm32duino.com/viewtopic.php?f=9&t=3706&p=46063&hilit=ws2812b#p46063>
+  With additional updates by Carl Nagel, June 2019
+
   It is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the

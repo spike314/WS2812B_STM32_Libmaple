@@ -10,6 +10,7 @@
   is probably too long for the WS2812 which needs a 350ns pulse for T0H
  
   With modificatons by Aram Prez to support SPI2.  See <http://www.stm32duino.com/viewtopic.php?f=9&t=3706&p=46063&hilit=ws2812b#p46063>
+  With additional updates by Carl Nagel, June 2019
 
   This WS2811B library is free software: you can redistribute it and/or modify
   it under the terms of the GNU Lesser General Public License as
